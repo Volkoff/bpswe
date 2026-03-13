@@ -1,6 +1,35 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
 {% block content %}
-<h1>Register</h1>
-<p>Register page — Person A works here.</p>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Create Account</h1>
+            <p>Join our hosting service today</p>
+        </div>
+        <form class="auth-form" method="POST" action="/register">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Create a password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Repeat your password"
+                    required>
+            </div>
+            <button type="submit" class="btn-primary">Sign Up</button>
+        </form>
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+        </div>
+    </div>
+</div>
 {% endblock %}
