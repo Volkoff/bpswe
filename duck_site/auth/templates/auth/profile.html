@@ -1,6 +1,86 @@
 {% extends "base.html" %}
 {% block title %}Profile{% endblock %}
 {% block content %}
-<h1>Profile</h1>
-<p>Profile page — Person A works here.</p>
+<div class="profile-container">
+    <div class="profile-card">
+        <!-- User Info Section -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <span>{{ user.username[0]|upper if user else 'A' }}</span>
+            </div>
+            <div class="profile-info">
+                <h1>{{ user.username if user else 'AlexMercer' }}</h1>
+                <p>{{ user.email if user else 'alex.mercer@example.com' }}</p>
+                <span class="role-badge">Premium User</span>
+            </div>
+        </div>
+        
+        <div class="profile-content">
+            <!-- Servers List Section -->
+            <div class="profile-section">
+                <h2>My Servers</h2>
+                <ul class="server-list">
+                    {% if servers %}
+                        {% for server in servers %}
+                        <li class="server-item">
+                            <div class="server-info">
+                                <span class="server-name">{{ server.name }}</span>
+                                <span class="server-status {{ server.status|lower }}">{{ server.status }}</span>
+                            </div>
+                            <div class="server-meta">
+                                <span>IP: {{ server.ip }}</span>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Visual Dummy Data -->
+                        <li class="server-item">
+                            <div class="server-info">
+                                <span class="server-name">Web Hosting Node 01</span>
+                                <span class="server-status active">Active</span>
+                            </div>
+                            <div class="server-meta">
+                                <span>IP: 192.168.1.104</span>
+                            </div>
+                        </li>
+                        <li class="server-item">
+                            <div class="server-info">
+                                <span class="server-name">Database Backup Server</span>
+                                <span class="server-status active">Active</span>
+                            </div>
+                            <div class="server-meta">
+                                <span>IP: 192.168.1.15</span>
+                            </div>
+                        </li>
+                        <li class="server-item">
+                            <div class="server-info">
+                                <span class="server-name">Testing Environment</span>
+                                <span class="server-status maintenance">Maintenance</span>
+                            </div>
+                            <div class="server-meta">
+                                <span>IP: 10.0.0.5</span>
+                            </div>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Change Password Section -->
+            <div class="profile-section">
+                <h2>Change Password</h2>
+                <form class="auth-form" method="POST" action="/change-password">
+                    <div class="form-group">
+                        <label for="current_password">Current Password</label>
+                        <input type="password" id="current_password" name="current_password" placeholder="Enter current password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_password">New Password</label>
+                        <input type="password" id="new_password" name="new_password" placeholder="Enter new password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Update Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
