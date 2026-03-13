@@ -1,38 +1,22 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    app.secret_key = "dev-secret-key"  # Change this in production
 
-@app.route("/")
-def home():
-    return """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Duck</title>
-        <style>
-            body {
-                margin: 0;
-                padding: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                background: #ffffff;
-                font-family: sans-serif;
-            }
-            h1 {
-                font-size: 2rem;
-                color: #333;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>duck</h1>
-    </body>
-    </html>
-    """
+    # Register blueprints
+    from auth.routes import auth_bp
+    from dashboard.routes import dashboard_bp
+
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(dashboard_bp)
+
+    @app.route("/")
+    def index():
+        return redirect(url_for("auth.login"))
+
+    return app
 
 if __name__ == "__main__":
+    app = create_app()
     app.run(debug=True, port=5000)
