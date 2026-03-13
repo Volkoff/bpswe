@@ -1,6 +1,111 @@
 {% extends "base.html" %}
-{% block title %}Service #{{ service_id }}{% endblock %}
+{% block title %}Manage Server #{{ service_id }}{% endblock %}
 {% block content %}
-<h1>Service #{{ service_id }}</h1>
-<p>Individual dashboard page — Person B works here.</p>
+
+<div class="dashboard-container">
+    <div class="dashboard-header" style="justify-content: flex-start; gap: 1rem;">
+        <a href="{{ url_for('dashboard.dashboard') }}" class="btn-secondary" style="padding: 0.5rem 1rem; text-decoration: none;">&larr; Back</a>
+        <div>
+            <h1 style="margin: 0; font-size: 1.8rem; display: flex; align-items: center; gap: 1rem;">
+                Server-Instance-{{ service_id }}
+                <span class="status-badge status-running" style="font-size: 0.8rem;">Running</span>
+            </h1>
+            <p style="margin: 0.2rem 0 0 0; color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">Ubuntu 22.04 LTS &bull; 109.164.52.63</p>
+        </div>
+    </div>
+
+    <div class="grid-cards" style="grid-template-columns: 2fr 1fr;">
+        <!-- Left Column: Metrics & Console -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            
+            <div class="server-card">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Resource Usage</h3>
+                <div style="display: flex; gap: 2rem;">
+                    <!-- CPU -->
+                    <div style="flex: 1;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">CPU</span>
+                            <span style="font-size: 0.9rem; font-weight: bold;">42%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                            <div style="width: 42%; height: 100%; background: #2ecc71;"></div>
+                        </div>
+                    </div>
+                    <!-- RAM -->
+                    <div style="flex: 1;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">RAM</span>
+                            <span style="font-size: 0.9rem; font-weight: bold;">2.1 / 4 GB</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                            <div style="width: 52%; height: 100%; background: #f39c12;"></div>
+                        </div>
+                    </div>
+                    <!-- Disk -->
+                    <div style="flex: 1;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">Disk</span>
+                            <span style="font-size: 0.9rem; font-weight: bold;">12 / 40 GB</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                            <div style="width: 30%; height: 100%; background: #3498db;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="server-card server-console">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem; display: flex; justify-content: space-between;">
+                    Console Output
+                    <button class="btn-secondary" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;">Clear</button>
+                </h3>
+                <div style="background: rgba(0,0,0,0.5); border-radius: 8px; padding: 1rem; height: 250px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; color: #a8ffb2; line-height: 1.5;">
+                    [14:02:11] systemd[1]: Started Nginx Web Server.<br>
+                    [14:02:11] systemd[1]: Started PostgreSQL Cluster 15-main.<br>
+                    [14:05:32] sshd[12401]: Accepted publickey for user root from 89.23.45.112 port 52312 ssh2<br>
+                    [14:10:00] CRON[13002]: (root) CMD (/usr/local/bin/backup_script.sh)<br>
+                    <span style="color: #fff;">_</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Controls -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            
+            <div class="server-card">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Power Controls</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <button class="btn-secondary" style="color: #2ecc71; border-color: rgba(46, 204, 113, 0.3); text-align: left; padding: 0.8rem 1rem;">
+                        &#9654; Start Server
+                    </button>
+                    <button class="btn-secondary" style="color: #f39c12; border-color: rgba(243, 156, 18, 0.3); text-align: left; padding: 0.8rem 1rem;">
+                        &#10227; Restart Server
+                    </button>
+                    <button class="btn-secondary" style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.3); text-align: left; padding: 0.8rem 1rem;">
+                        &#9724; Force Stop
+                    </button>
+                </div>
+            </div>
+
+            <div class="server-card">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Network Info</h3>
+                <div class="server-details" style="margin-bottom: 0;">
+                    <p><span>Public IP</span> <strong>109.164.52.63</strong></p>
+                    <p><span>Private IP</span> <strong>10.116.0.4</strong></p>
+                    <p><span>Gateway</span> <strong>10.116.0.1</strong></p>
+                    <p><span>MAC Address</span> <strong>aa:bb:cc:dd:ee:ff</strong></p>
+                </div>
+            </div>
+
+            <div class="server-card">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem; color: #e74c3c;">Danger Zone</h3>
+                <button class="btn-primary" style="background: linear-gradient(135deg, #c0392b, #e74c3c); padding: 0.8rem; width: 100%;">Destroy Server</button>
+                <p style="font-size: 0.8rem; color: rgba(255,255,255,0.5); text-align: center; margin-top: 0.8rem;">This action cannot be undone.</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 {% endblock %}

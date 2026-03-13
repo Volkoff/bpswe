@@ -1,6 +1,58 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Servers Dashboard{% endblock %}
 {% block content %}
-<h1>Dashboard</h1>
-<p>Dashboard page — Person B works here.</p>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Your Servers (Domains)</h1>
+        <button class="btn-primary" style="width: auto; margin-top: 0; padding: 0.6rem 1.5rem;">+ Deploy New Server</button>
+    </div>
+
+    <div class="grid-cards">
+        {% for domain in domains %}
+        <!-- Server Card -->
+        <div class="server-card">
+            <div class="server-top">
+                <div class="server-title">{{ domain.domain_name }}</div>
+                {% if domain.active == 'Y' %}
+                <div class="status-badge status-running">Running</div>
+                {% else %}
+                <div class="status-badge status-stopped">Stopped</div>
+                {% endif %}
+            </div>
+            
+            <div class="server-details">
+                <p><span>Doc Root</span> <strong>{{ domain.document_root }}</strong></p>
+                <p><span>Created</span> <strong>{{ domain.created_at.strftime('%Y-%m-%d') }}</strong></p>
+                <p><span>Owner ID</span> <strong>{{ domain.user_id }}</strong></p>
+            </div>
+
+            <div class="db-section">
+                <h4>Attach Database</h4>
+                <select class="db-select">
+                    <option value="">Select a database to attach...</option>
+                    {% for db in databases %}
+                    <option value="{{ db.db_id }}">{{ db.db_name }} ({{ db.db_user }})</option>
+                    {% endfor %}
+                </select>
+                <button class="btn-secondary btn-sm" style="width: 100%;">Connect DB</button>
+            </div>
+
+            <div class="server-actions">
+                <a href="{{ url_for('dashboard.individual_dashboard', service_id=domain.domain_id) }}" class="btn-secondary btn-sm" style="text-align: center; text-decoration: none; display: inline-block;">Manage</a>
+                {% if domain.active == 'Y' %}
+                <button class="btn-secondary btn-sm" style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.3);">Stop</button>
+                {% else %}
+                <button class="btn-secondary btn-sm" style="color: #2ecc71; border-color: rgba(46, 204, 113, 0.3);">Start</button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if not domains %}
+        <p style="color: rgba(255,255,255,0.6);">No servers (domains) found in the database.</p>
+        {% endif %}
+    </div>
+</div>
+
 {% endblock %}
