@@ -5,7 +5,9 @@ def create_app():
     app = Flask(__name__)
     app.secret_key = "dev-secret-key"  # Change this in production
     
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
+    import urllib.parse
+    password = urllib.parse.quote_plus("T!gfwo&*24@!gjw!5%")
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql+psycopg2://student:{password}@localhost:5432/hosting_center"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
@@ -21,24 +23,10 @@ def create_app():
     def index():
         return redirect(url_for("auth.login"))
 
-    # Initializing local database with some dummy data so we can see stuff!
+    # Connecting to the local database; removed dummy data initialization to avoid altering data.
     with app.app_context():
-        db.create_all()
-        
-        if not User.query.first():
-            test_user = User(username="testuser", email="test@test.com", password_hash="dummyhash", role="user", home_directory="/var/www/testuser")
-            db.session.add(test_user)
-            db.session.commit()
-            
-            d1 = Domain(domain_name="example-prod.com", document_root="/var/www/testuser/example", active="Y", user_id=test_user.user_id)
-            d2 = Domain(domain_name="dev-staging.net", document_root="/var/www/testuser/dev", active="N", user_id=test_user.user_id)
-            db.session.add_all([d1, d2])
-            
-            db1 = Database(db_name="wp_prod_db", db_user="wp_user", db_password="pwd", user_id=test_user.user_id)
-            db2 = Database(db_name="dev_db", db_user="dev_user", db_password="pwd", user_id=test_user.user_id)
-            db.session.add_all([db1, db2])
-            
-            db.session.commit()
+        pass
+        # db.create_all() ... (dummy data initialization removed)
 
     return app
 

@@ -7,10 +7,14 @@
         <a href="{{ url_for('dashboard.dashboard') }}" class="btn-secondary" style="padding: 0.5rem 1rem; text-decoration: none;">&larr; Back</a>
         <div>
             <h1 style="margin: 0; font-size: 1.8rem; display: flex; align-items: center; gap: 1rem;">
-                Server-Instance-{{ service_id }}
+                {{ domain.domain_name }}
+                {% if domain.active == 'Y' %}
                 <span class="status-badge status-running" style="font-size: 0.8rem;">Running</span>
+                {% else %}
+                <span class="status-badge status-stopped" style="font-size: 0.8rem;">Stopped</span>
+                {% endif %}
             </h1>
-            <p style="margin: 0.2rem 0 0 0; color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">Ubuntu 22.04 LTS &bull; 109.164.52.63</p>
+            <p style="margin: 0.2rem 0 0 0; color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">Document Root: {{ domain.document_root }}</p>
         </div>
     </div>
 
@@ -76,15 +80,18 @@
             <div class="server-card">
                 <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Power Controls</h3>
                 <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-                    <button class="btn-secondary" style="color: #2ecc71; border-color: rgba(46, 204, 113, 0.3); text-align: left; padding: 0.8rem 1rem;">
-                        &#9654; Start Server
-                    </button>
-                    <button class="btn-secondary" style="color: #f39c12; border-color: rgba(243, 156, 18, 0.3); text-align: left; padding: 0.8rem 1rem;">
-                        &#10227; Restart Server
-                    </button>
-                    <button class="btn-secondary" style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.3); text-align: left; padding: 0.8rem 1rem;">
-                        &#9724; Force Stop
-                    </button>
+                    <form method="POST" action="{{ url_for('dashboard.individual_dashboard', service_id=domain.domain_id) }}" style="margin: 0;">
+                        <input type="hidden" name="action" value="toggle_status">
+                        {% if domain.active == 'Y' %}
+                        <button type="submit" class="btn-secondary" style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.3); text-align: left; padding: 0.8rem 1rem; width: 100%;">
+                            &#9724; Stop Request
+                        </button>
+                        {% else %}
+                        <button type="submit" class="btn-secondary" style="color: #2ecc71; border-color: rgba(46, 204, 113, 0.3); text-align: left; padding: 0.8rem 1rem; width: 100%;">
+                            &#9654; Start Request
+                        </button>
+                        {% endif %}
+                    </form>
                 </div>
             </div>
 

@@ -3,9 +3,19 @@
 {% block content %}
 
 <div class="dashboard-container">
-    <div class="dashboard-header">
+    {% if db_version %}
+    <div style="background-color: rgba(46, 204, 113, 0.1); border: 1px solid #2ecc71; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h4 style="margin: 0 0 0.5rem 0; color: #2ecc71;">Database Connection Test:</h4>
+        <p style="margin: 0; font-family: monospace;">{{ db_version }}</p>
+    </div>
+    {% endif %}
+
+    <div class="dashboard-header" style="justify-content: space-between; align-items: center;">
         <h1>Your Servers (Domains)</h1>
-        <button class="btn-primary" style="width: auto; margin-top: 0; padding: 0.6rem 1.5rem;">+ Deploy New Server</button>
+        <form method="POST" action="{{ url_for('dashboard.dashboard') }}" style="display: flex; gap: 10px; align-items: center; margin: 0;">
+            <input type="text" name="domain_name" placeholder="example.com" required style="padding: 0.6rem; border-radius: 4px; border: 1px solid #ccc; background: rgba(255, 255, 255, 0.1); color: white;">
+            <button type="submit" class="btn-primary" style="width: auto; margin-top: 0; padding: 0.6rem 1.5rem;">+ Deploy Server</button>
+        </form>
     </div>
 
     <div class="grid-cards">

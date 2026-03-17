@@ -1,0 +1,2 @@
+ERROR: could not translate host name "db.ivzwerijqlaftpqnnmdc.supabase.co" to address: Name or service not known
+

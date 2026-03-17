@@ -1,16 +1,72 @@
-from flask import Blueprint, render_template
-from models import db, Domain, Database
+from flask import Blueprint, render_template, session, redirect, url_for, request, flash
+from models import db, Domain, Database, User
+from sqlalchemy import text
 
 dashboard_bp = Blueprint("dashboard", __name__, template_folder="templates")
 
-@dashboard_bp.route("/dashboard")
+@dashboard_bp.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
-    # In a real app we'd fetch for the logged-in user, but let's just get everything for now
-    domains = Domain.query.all()
-    databases = Database.query.all()
-    return render_template("dashboard/dashboard.html", domains=domains, databases=databases)
+    if "user_id" not in session:
+        return redirect(url_for("auth.login"))
+        
+    user_id = session["user_id"]
+    user = User.query.get(user_id)
+    
+    if request.method == "POST":
+        domain_name = request.form.get("domain_name")
+        if domain_name:
+            # Basic validation
+            existing = Domain.query.filter_by(domain_name=domain_name).first()
+            if existing:
+                flash("Domain already exists!")
+            else:
+                doc_root = f"{user.home_directory}/{domain_name}"
+                new_domain = Domain(domain_name=domain_name, document_root=doc_root, active='Y', user_id=user_id)
+                db.session.add(new_domain)
+                db.session.commit()
+                flash("New server deployed successfully!")
+        return redirect(url_for("dashboard.dashboard"))
 
-@dashboard_bp.route("/dashboard/<int:service_id>")
+    # Test DB Connection with raw SQL select
+    try:
+        result = db.session.execute(text("SELECT version();")).fetchone()
+        db_version = result[0] if result else "Unknown"
+    except Exception as e:
+        db_version = f"Error: {str(e)}"
+
+    try:
+        domains = Domain.query.filter_by(user_id=user_id).all()
+    except Exception as e:
+        domains = []
+        print("Domain query failed:", e)
+
+    try:
+        databases = Database.query.filter_by(user_id=user_id).all()
+    except Exception as e:
+        databases = []
+        print("Database query failed:", e)
+
+    return render_template("dashboard/dashboard.html", domains=domains, databases=databases, db_version=db_version)
+
+@dashboard_bp.route("/dashboard/<int:service_id>", methods=["GET", "POST"])
 def individual_dashboard(service_id):
+    if "user_id" not in session:
+        return redirect(url_for("auth.login"))
+        
     domain = Domain.query.get_or_404(service_id)
+    
+    # Ensure the domain belongs to the logged in user
+    if domain.user_id != session["user_id"]:
+        flash("Unauthorized access!")
+        return redirect(url_for("dashboard.dashboard"))
+
+    if request.method == "POST":
+        action = request.form.get("action")
+        if action == "toggle_status":
+            domain.active = 'N' if domain.active == 'Y' else 'Y'
+            db.session.commit()
+            status_text = "stopped" if domain.active == 'N' else "started"
+            flash(f"Domain {domain.domain_name} has been {status_text}.")
+        return redirect(url_for('dashboard.individual_dashboard', service_id=domain.domain_id))
+        
     return render_template("dashboard/individual.html", domain=domain)
