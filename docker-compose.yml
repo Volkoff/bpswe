@@ -15,30 +15,5 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./db/database.sql:/docker-entrypoint-initdb.d/database.sql
 
-  nginx:
-    image: nginx:alpine
-    container_name: bpswe-nginx
-    restart: always
-    ports:
-      - "80:80"
-    volumes:
-      - ./web:/var/www/html
-      - ./nginx/conf.d:/etc/nginx/conf.d
-    depends_on:
-      - postgres
-
-  pure-ftpd:
-    build: ./ftp
-    container_name: bpswe-ftp
-    restart: always
-    ports:
-      - "21:21"
-      - "30000-30009:30000-30009"
-    volumes:
-      - ./web:/var/www/html
-      - ./ftp/pureftpd-pgsql.conf:/etc/pure-ftpd/db/postgresql.conf
-    depends_on:
-      - postgres
-
 volumes:
   postgres_data:
