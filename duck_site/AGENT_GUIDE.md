@@ -88,7 +88,8 @@ duck_site/
 ---
 
 ## Running the App
-
+1. Start Docker Desctop
+2. 
 ```bash
 docker compose up -d
 
