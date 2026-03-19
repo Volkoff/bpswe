@@ -7,7 +7,7 @@ def create_app():
     
     import urllib.parse
     password = urllib.parse.quote_plus("T!gfwo&*24@!gjw!5%")
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql+psycopg2://student:{password}@localhost:5432/hosting_center"
+    app.config["SQLALCHEMY_DATABASE_URI"] = (f"postgresql+psycopg2://student:{password}@postgres:5432/hosting_center")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
@@ -32,4 +32,4 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True, port=5000)
+    app.run(host="0.0.0.0", debug=True, port=5000)

@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 db = SQLAlchemy()
 
 class User(db.Model):
-    __tablename__ = "users"
+    __tablename__ = "user"
 
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(40), nullable=False)
@@ -20,7 +20,7 @@ class User(db.Model):
     user_plans = db.relationship('UserPlan', backref='user', lazy=True)
 
 class Plan(db.Model):
-    __tablename__ = "plans"
+    __tablename__ = "plan"
 
     plan_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False)
@@ -30,40 +30,40 @@ class Plan(db.Model):
     user_plans = db.relationship('UserPlan', backref='plan', lazy=True)
 
 class UserPlan(db.Model):
-    __tablename__ = "user_plans"
+    __tablename__ = "user_plan"
 
     user_plan_id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date, nullable=False)
     expire_date = db.Column(db.Date, nullable=False)
-    plan_id = db.Column(db.Integer, db.ForeignKey('plans.plan_id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    plan_id = db.Column(db.Integer, db.ForeignKey('plan.plan_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
 
 class Database(db.Model):
-    __tablename__ = "databases"
+    __tablename__ = "database"
 
     db_id = db.Column(db.Integer, primary_key=True)
     db_name = db.Column(db.String(30), nullable=False)
     db_user = db.Column(db.String(50), nullable=False)
     db_password = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
 
 class Domain(db.Model):
-    __tablename__ = "domains"
+    __tablename__ = "domain"
 
     domain_id = db.Column(db.Integer, primary_key=True)
     domain_name = db.Column(db.String(100), nullable=False)
     document_root = db.Column(db.String(500), nullable=False)
     active = db.Column(db.String(1), nullable=False, default='Y')
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
 
 class FtpAccount(db.Model):
-    __tablename__ = "ftp_accounts"
+    __tablename__ = "ftp_account"
 
     account_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(40), nullable=False)
     password_hash = db.Column(db.String(500), nullable=False)
     directory = db.Column(db.String(500), nullable=False)
     quota = db.Column(db.Integer, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)

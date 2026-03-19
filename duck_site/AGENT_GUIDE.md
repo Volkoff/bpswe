@@ -90,9 +90,8 @@ duck_site/
 ## Running the App
 
 ```bash
-pip install flask
-cd duck_site
-python app.py
+docker compose up -d
+
 ```
 
 The app runs at **http://127.0.0.1:5000**.
