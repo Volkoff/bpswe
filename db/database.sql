@@ -41,7 +41,7 @@ CREATE TABLE user_plans (
     user_plan_id SERIAL PRIMARY KEY,
     start_date TIMESTAMP,
     expire_date TIMESTAMP,
-    plan_id INTEGER REFERENCES plan(plan_id),
+    plan_id INTEGER REFERENCES plans(plan_id),
     user_id INTEGER REFERENCES users(user_id)
 );
 
