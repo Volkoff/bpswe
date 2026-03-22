@@ -26,5 +26,20 @@ services:
     environment:
       FLASK_ENV: development
 
+  ftp:
+    image: stilliard/pure-ftpd:hardened
+    container_name: bpswe-ftp
+    restart: always
+    ports:
+      - "21:21"
+      - "30000-30009:30000-30009"
+    environment:
+      PUBLICHOST: "localhost"
+      FTP_USER_NAME: "ftpuser"      
+      FTP_USER_PASS: "1234"
+      FTP_USER_HOME: "/home/ftpuser"
+    volumes:
+      - ./ftpdata:/home/ftpuser   
+
 volumes:
   postgres_data:
