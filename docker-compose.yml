@@ -40,6 +40,18 @@ services:
       FTP_USER_HOME: "/home/ftpuser"
     volumes:
       - ./ftpdata:/home/ftpuser   
+      
+  apache:
+    build: ./apache
+    container_name: bpswe-apache
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
 
 volumes:
   postgres_data:
