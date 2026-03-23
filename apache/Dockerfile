@@ -33,7 +33,7 @@ RUN sed -i '/LoadModule proxy_module/s/^#//g' /usr/local/apache2/conf/httpd.conf
 COPY httpd.conf /usr/local/apache2/conf/httpd.conf
 
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY apache_entrypoint.sh /apache_entrypoint.sh
+RUN chmod +x /apache_entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/apache_entrypoint.sh"]
