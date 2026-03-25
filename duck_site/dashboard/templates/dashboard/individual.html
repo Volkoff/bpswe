@@ -8,7 +8,7 @@
         <div>
             <h1 style="margin: 0; font-size: 1.8rem; display: flex; align-items: center; gap: 1rem;">
                 {{ domain.domain_name }}
-                {% if domain.active == 'Y' %}
+                {% if domain.active %}
                 <span class="status-badge status-running" style="font-size: 0.8rem;">Running</span>
                 {% else %}
                 <span class="status-badge status-stopped" style="font-size: 0.8rem;">Stopped</span>
@@ -82,7 +82,7 @@
                 <div style="display: flex; flex-direction: column; gap: 0.8rem;">
                     <form method="POST" action="{{ url_for('dashboard.individual_dashboard', service_id=domain.domain_id) }}" style="margin: 0;">
                         <input type="hidden" name="action" value="toggle_status">
-                        {% if domain.active == 'Y' %}
+                        {% if domain.active %}
                         <button type="submit" class="btn-secondary" style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.3); text-align: left; padding: 0.8rem 1rem; width: 100%;">
                             &#9724; Stop Request
                         </button>

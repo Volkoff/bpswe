@@ -21,7 +21,7 @@ def dashboard():
                 flash("Domain already exists!")
             else:
                 doc_root = f"{user.home_directory}/{domain_name}"
-                new_domain = Domain(domain_name=domain_name, document_root=doc_root, active='Y', user_id=user_id)
+                new_domain = Domain(domain_name=domain_name, document_root=doc_root, active=True, user_id=user_id)
                 db.session.add(new_domain)
                 db.session.commit()
                 flash("New server deployed successfully!")
@@ -63,9 +63,9 @@ def individual_dashboard(service_id):
     if request.method == "POST":
         action = request.form.get("action")
         if action == "toggle_status":
-            domain.active = 'N' if domain.active == 'Y' else 'Y'
+            domain.active = not domain.active
             db.session.commit()
-            status_text = "stopped" if domain.active == 'N' else "started"
+            status_text = "stopped" if not domain.active else "started"
             flash(f"Domain {domain.domain_name} has been {status_text}.")
         return redirect(url_for('dashboard.individual_dashboard', service_id=domain.domain_id))
         

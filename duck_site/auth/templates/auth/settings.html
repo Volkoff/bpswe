@@ -1,6 +1,146 @@
 {% extends "base.html" %}
 {% block title %}Settings{% endblock %}
 {% block content %}
-<h1>Settings</h1>
-<p>Settings page — Person A works here.</p>
+<style>
+/* Sleek Toggle Switch CSS */
+.settings-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    background: rgba(25, 30, 45, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+}
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.setting-item:last-child {
+    border-bottom: none;
+}
+.setting-info h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: white;
+}
+.setting-info p {
+    margin: 0.2rem 0 0 0;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+}
+
+/* The toggle switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255,255,255,0.2);
+  transition: .4s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #3498db;
+}
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+</style>
+
+<div class="settings-container">
+    <h1 style="margin-top: 0; margin-bottom: 1.5rem;">User Settings</h1>
+    
+    <form method="POST" action="{{ url_for('auth.settings') }}">
+        
+        <div class="setting-item">
+            <div class="setting-info">
+                <h3>Light Theme</h3>
+                <p>Toggle the dashboard color scheme</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" name="theme" value="light" {% if settings.theme == 'light' %}checked{% endif %}>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <h3 style="margin-top: 2rem; margin-bottom: 0.5rem; color: #3498db;">Dashboard Display Options</h3>
+        <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-bottom: 1.5rem;">Toggle which data blocks you want to see on the shortened server cards.</p>
+
+        <div class="setting-item">
+            <div class="setting-info">
+                <h3>Show Console Logs</h3>
+                <p>Display recent terminal output for this server</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" name="show_console" {% if settings.show_console %}checked{% endif %}>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-item">
+            <div class="setting-info">
+                <h3>Show CPU Usage</h3>
+                <p>Display real-time CPU metric graphs</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" name="show_cpu" {% if settings.show_cpu %}checked{% endif %}>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-item">
+            <div class="setting-info">
+                <h3>Show RAM Usage</h3>
+                <p>Display physical memory allocation</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" name="show_ram" {% if settings.show_ram %}checked{% endif %}>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-item">
+            <div class="setting-info">
+                <h3>Show Disk Usage</h3>
+                <p>Display storage space consumption</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" name="show_disk" {% if settings.show_disk %}checked{% endif %}>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div style="margin-top: 2.5rem; text-align: right;">
+            <button type="submit" class="btn-primary" style="padding: 0.8rem 2rem;">Save Changes</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

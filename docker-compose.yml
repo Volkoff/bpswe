@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: student
       POSTGRES_PASSWORD: T!gfwo&*24@!gjw!5%
     ports:
-      - "5432:5432"
+      - "6432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./db/database.sql:/docker-entrypoint-initdb.d/database.sql
@@ -25,6 +25,8 @@ services:
       - "5000:5000"
     environment:
       FLASK_ENV: development
+      DB_HOST: postgres
+      DB_PORT: "5432"
 
   ftp:
     image: stilliard/pure-ftpd:hardened

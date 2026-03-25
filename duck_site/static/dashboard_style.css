@@ -2,7 +2,7 @@
 .dashboard-container {
     padding: 2rem;
     min-height: calc(100vh - 72px); /* subtract nav height */
-    background: linear-gradient(135deg, #1b1b2f, #162447, #1f4068);
+    background: transparent;
     color: #fff;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

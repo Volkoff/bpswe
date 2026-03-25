@@ -54,7 +54,7 @@ class Domain(db.Model):
     domain_id = db.Column(db.Integer, primary_key=True)
     domain_name = db.Column(db.String(100), nullable=False)
     document_root = db.Column(db.String(500), nullable=False)
-    active = db.Column(db.String(1), nullable=False, default='Y')
+    active = db.Column(db.Boolean, nullable=False, default=True)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
 

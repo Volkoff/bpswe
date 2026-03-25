@@ -94,5 +94,5 @@ duck_site/
 docker compose up -d
 
 ```
-
+DO NOT USE THE DOCKER COMMANDS. ASK THE USER TO DO IT.
 The app runs at **http://127.0.0.1:5000**.

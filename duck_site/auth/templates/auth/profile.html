@@ -33,53 +33,70 @@
                         </li>
                         {% endfor %}
                     {% else %}
-                        <!-- Visual Dummy Data -->
-                        <li class="server-item">
-                            <div class="server-info">
-                                <span class="server-name">Web Hosting Node 01</span>
-                                <span class="server-status active">Active</span>
-                            </div>
-                            <div class="server-meta">
-                                <span>IP: 192.168.1.104</span>
-                            </div>
-                        </li>
-                        <li class="server-item">
-                            <div class="server-info">
-                                <span class="server-name">Database Backup Server</span>
-                                <span class="server-status active">Active</span>
-                            </div>
-                            <div class="server-meta">
-                                <span>IP: 192.168.1.15</span>
-                            </div>
-                        </li>
-                        <li class="server-item">
-                            <div class="server-info">
-                                <span class="server-name">Testing Environment</span>
-                                <span class="server-status maintenance">Maintenance</span>
-                            </div>
-                            <div class="server-meta">
-                                <span>IP: 10.0.0.5</span>
-                            </div>
+                        <li class="server-item" style="justify-content: center; padding: 2rem;">
+                            <span style="color: rgba(255,255,255,0.6);">No servers deployed yet. Go to Dashboard to deploy one!</span>
                         </li>
                     {% endif %}
                 </ul>
             </div>
 
-            <!-- Change Password Section -->
+            <!-- Security Section -->
             <div class="profile-section">
-                <h2>Change Password</h2>
-                <form class="auth-form" method="POST" action="/change-password">
+                <h2>Security</h2>
+                <button id="openPasswordModalBtn" class="btn-primary" style="background-color: #f39c12;">Change Password</button>
+            </div>
+            
+            <!-- The Modal -->
+            <div id="passwordModal" class="modal">
+              <div class="modal-content">
+                <span class="close-modal" id="closePasswordModalBtn">&times;</span>
+                <h2 style="margin-top:0;">Change Password</h2>
+                <form class="auth-form" method="POST" action="{{ url_for('auth.change_password') }}">
                     <div class="form-group">
-                        <label for="current_password">Current Password</label>
-                        <input type="password" id="current_password" name="current_password" placeholder="Enter current password" required>
+                        <label for="old_password">Current Password</label>
+                        <input type="password" id="old_password" name="old_password" placeholder="Enter current password" required>
                     </div>
                     <div class="form-group">
                         <label for="new_password">New Password</label>
                         <input type="password" id="new_password" name="new_password" placeholder="Enter new password" required>
                     </div>
-                    <button type="submit" class="btn-primary">Update Password</button>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm New Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Match new password" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="margin-top: 10px;">Update Password</button>
                 </form>
+              </div>
             </div>
+            
+            <style>
+            .modal {
+              display: none; 
+              position: fixed; 
+              z-index: 1000; 
+              left: 0; top: 0; width: 100%; height: 100%; 
+              background-color: rgba(0,0,0,0.6); 
+              backdrop-filter: blur(5px);
+            }
+            .modal-content {
+              background: rgba(25, 30, 45, 0.95);
+              margin: 10% auto; padding: 2rem;
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 12px; width: 80%; max-width: 400px;
+              position: relative;
+            }
+            .close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+            .close-modal:hover { color: white; }
+            </style>
+            
+            <script>
+            const modal = document.getElementById("passwordModal");
+            const btn = document.getElementById("openPasswordModalBtn");
+            const span = document.getElementById("closePasswordModalBtn");
+            btn.onclick = function() { modal.style.display = "block"; }
+            span.onclick = function() { modal.style.display = "none"; }
+            window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
+            </script>
         </div>
     </div>
 </div>

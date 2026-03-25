@@ -65,17 +65,60 @@ def profile():
         
     # Map domains to appropriate server info format for template
     servers = [
-        {"name": dom.domain_name, "status": "Active" if dom.active == 'Y' else "Stopped", "ip": "127.0.0.1 (Local)"} 
+        {"name": dom.domain_name, "status": "Active" if dom.active else "Stopped", "ip": "127.0.0.1 (Local)"} 
         for dom in user.domains
     ]
         
     return render_template("auth/profile.html", user=user, servers=servers)
 
-@auth_bp.route("/settings")
+@auth_bp.route("/settings", methods=["GET", "POST"])
 def settings():
     if "user_id" not in session:
         return redirect(url_for("auth.login"))
-    return render_template("auth/settings.html")
+        
+    if request.method == "POST":
+        session["settings"] = {
+            "theme": request.form.get("theme", "dark"),
+            "show_console": "show_console" in request.form,
+            "show_cpu": "show_cpu" in request.form,
+            "show_ram": "show_ram" in request.form,
+            "show_disk": "show_disk" in request.form,
+        }
+        flash("Settings saved successfully!")
+        return redirect(url_for("auth.settings"))
+        
+    user_settings = session.get("settings", {
+        "theme": "dark",
+        "show_console": True,
+        "show_cpu": True,
+        "show_ram": True,
+        "show_disk": True
+    })
+    
+    return render_template("auth/settings.html", settings=user_settings)
+
+@auth_bp.route("/change_password", methods=["POST"])
+def change_password():
+    if "user_id" not in session:
+        return redirect(url_for("auth.login"))
+        
+    user = User.query.get(session["user_id"])
+    old_password = request.form.get("old_password")
+    new_password = request.form.get("new_password")
+    confirm_password = request.form.get("confirm_password")
+    
+    if not check_password_hash(user.password_hash, old_password):
+        flash("Incorrect current password!")
+        return redirect(url_for("auth.profile"))
+        
+    if new_password != confirm_password:
+        flash("New passwords do not match!")
+        return redirect(url_for("auth.profile"))
+        
+    user.password_hash = generate_password_hash(new_password)
+    db.session.commit()
+    flash("Password updated successfully!")
+    return redirect(url_for("auth.profile"))
 
 @auth_bp.route("/logout")
 def logout():
