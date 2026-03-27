@@ -17,12 +17,15 @@ FROM httpd:2.4
 
 
 
+RUN apt-get update && apt-get install -y openssl
+
 # self-signed cert
-# RUN openssl req -x509 -nodes -days 365 \
-#     -newkey rsa:2048 \
-#     -keyout /usr/local/apache2/conf/server.key \
-#     -out /usr/local/apache2/conf/server.crt \
-#     -subj "/CN=localhost"
+RUN openssl req -x509 -nodes -days 365 \
+    -newkey rsa:2048 \
+    -keyout /usr/local/apache2/conf/server.key \
+    -out /usr/local/apache2/conf/server.crt \
+    -subj "/CN=tvoje-domena.cz"
+    # -subj "/CN=localhost"
 
 # zapnutí modulů
 RUN sed -i '/LoadModule proxy_module/s/^#//g' /usr/local/apache2/conf/httpd.conf && \
