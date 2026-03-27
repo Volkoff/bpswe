@@ -51,7 +51,8 @@ services:
       - "443:443"
     depends_on:
       - web
-    # volumes:
+    volumes:
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
     #   - ./certbot/conf:/etc/letsencrypt
     #   - ./certbot/www:/var/www/certbot
 

@@ -33,7 +33,7 @@ RUN sed -i '/LoadModule proxy_module/s/^#//g' /usr/local/apache2/conf/httpd.conf
     #sed -i '/LoadModule ssl_module/s/^#//g' /usr/local/apache2/conf/httpd.conf && \
     #sed -i '/LoadModule rewrite_module/s/^#//g' /usr/local/apache2/conf/httpd.conf
 
-COPY httpd.conf /usr/local/apache2/conf/httpd.conf
+# COPY httpd.conf /usr/local/apache2/conf/httpd.conf
 
 
 COPY apache_entrypoint.sh /apache_entrypoint.sh
