@@ -6,7 +6,7 @@ if (!$conn) {
     die("chyba připojení k databázi");
 }
 
-// 1️⃣ users data
+// users data
 $users = [
     ['user1', 'user1@test.cz', 'hash123', 'user', '/var/www/user1']
 ];
@@ -20,7 +20,7 @@ foreach ($users as $row) {
     pg_query($conn, $sql);
 }
 
-// 2️⃣ plans data
+// plans data
 $plans = [
     ['Basic', 2.99, 30]
 ];
@@ -34,7 +34,7 @@ foreach ($plans as $plan) {
     pg_query($conn, $sql);
 }
 
-// 3️⃣ domain data
+// domain data
 $domains = [
     ['www.mojefirma.cz', '/var/www/user1/site1', 1]
 ];
@@ -48,7 +48,7 @@ foreach ($domains as $domain) {
     pg_query($conn, $sql);
 }
 
-// 4️⃣ FTP-accounts
+// FTP-accounts
 $ftp_accounts = [
     ['ftpuser1', 'hash123', '/var/www/user1', 1000, 1]
 ];
