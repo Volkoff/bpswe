@@ -1,9 +1,15 @@
 <?php
+/**
+ * This script automatically loads default data into the PostgreSQL database for the application.
+ * It inserts initial users, plans, domains, and FTP accounts.
+ * If a record already exists (same username, plan name, domain name, or FTP username), it will not be duplicated.
+ */
+
 // connection to  PostgreSQL through  Unix socket
 $conn = pg_connect("host=/var/run/postgresql dbname=hosting user=postgres");
 
 if (!$conn) {
-    die("chyba připojení k databázi");
+    die("Chyba připojení k databázi");
 }
 
 // users data
