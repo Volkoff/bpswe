@@ -7,10 +7,17 @@ def create_app():
     
     import os
     import urllib.parse
+
+    # Кодируем пароль
     password = urllib.parse.quote_plus("T!gfwo&*24@!gjw!5%")
+
     db_host = os.environ.get("DB_HOST", "127.0.0.1")
-    db_port = os.environ.get("DB_PORT", "6432")
-    app.config["SQLALCHEMY_DATABASE_URI"] = (f"postgresql+psycopg2://student:{password}@{db_host}:{db_port}/hosting_center")
+    db_port = os.environ.get("DB_PORT", "3306")
+
+    # 🔥 ВАЖНО: меняем на MySQL + pymysql
+    app.config["SQLALCHEMY_DATABASE_URI"] = (
+        f"mysql+pymysql://student:{password}@{db_host}:{db_port}/hosting_center"
+    )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
@@ -35,12 +42,12 @@ def create_app():
             return redirect(url_for("dashboard.dashboard"))
         return redirect(url_for("auth.login"))
 
-    # Connecting to the local database; removed dummy data initialization to avoid altering data.
+    # Connecting to the database
     with app.app_context():
         pass
-        # db.create_all() ... (dummy data initialization removed)
 
     return app
+
 
 if __name__ == "__main__":
     app = create_app()

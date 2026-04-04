@@ -1,18 +1,19 @@
 version: "3.9"
 
 services:
-  postgres:
-    image: postgres:15
+  mysql:
+    image: mysql:8.0
     container_name: bpswe-db
     restart: always
     environment:
-      POSTGRES_DB: hosting_center
-      POSTGRES_USER: student
-      POSTGRES_PASSWORD: T!gfwo&*24@!gjw!5%
+      MYSQL_DATABASE: hosting_center
+      MYSQL_USER: student
+      MYSQL_PASSWORD: "T!gfwo&*24@!gjw!5%"
+      MYSQL_ROOT_PASSWORD: rootpassword
     ports:
-      - "6432:5432"
+      - "3307:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
       - ./db/database.sql:/docker-entrypoint-initdb.d/database.sql
 
   web:
@@ -20,13 +21,13 @@ services:
     container_name: bpswe-app
     restart: always
     depends_on:
-      - postgres
+      - mysql
     ports:
       - "5000:5000"
     environment:
       FLASK_ENV: development
-      DB_HOST: postgres
-      DB_PORT: "5432"
+      DB_HOST: mysql
+      DB_PORT: "3306"
     volumes:
       - ./www:/var/www
 
@@ -38,15 +39,13 @@ services:
       - "21:21"
       - "30000-30009:30000-30009"
     environment:
-      # Passive mode parameters (localhost for local, IP for production)
       - PUBLICHOST=localhost
     depends_on:
-      - postgres
+      - mysql
     volumes:
       - ./ftp/pureftpd-pgsql.conf:/etc/pure-ftpd/pureftpd-pgsql.conf:ro
       - ./www:/var/www
 
-      
   apache:
     build: ./apache
     container_name: bpswe-apache
@@ -58,8 +57,6 @@ services:
     volumes:
       - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
       - ./www:/var/www
-    #   - ./certbot/conf:/etc/letsencrypt
-    #   - ./certbot/www:/var/www/certbot
 
 volumes:
-  postgres_data:
+  mysql_data:
