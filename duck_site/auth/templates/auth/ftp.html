@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Web FTP Client{% endblock %}
+{% block content %}
+<div class="auth-container" style="max-width: 800px; margin: 2rem auto;">
+    <div class="auth-card" style="width: 100%; padding: 2rem;">
+        <div class="auth-header">
+            <h1 style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .343-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4H2.19zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707z" />
+                </svg>
+                FTP Explorer
+            </h1>
+            <p>Connect to a local or remote FTP server</p>
+        </div>
+
+        {% if error %}
+        <div class="flash-alert"
+            style="background: rgba(231, 76, 60, 0.15); border: 1px solid rgba(231, 76, 60, 0.4); color: #ffcccc; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form class="auth-form" method="POST" action="{{ url_for('auth.ftp_client') }}"
+            style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; margin-bottom: 30px;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="host">Host / IP</label>
+                <input type="text" id="host" name="host" placeholder="ftp" value="{{ request.form.get('host', 'ftp') }}"
+                    required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="ftp_user"
+                    value="{{ request.form.get('username', '') }}" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="enter password" required>
+            </div>
+            <button type="submit" class="btn-primary"
+                style="margin-top: 0; padding: 0.8rem 1.5rem; height: 42px;">Connect</button>
+        </form>
+
+        {% if files != None %}
+        <div
+            style="background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden;">
+            <div
+                style="background: rgba(255,255,255,0.05); padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: bold; color: rgba(255,255,255,0.8);">
+                Directory Listing
+            </div>
+            <div
+                style="padding: 15px; max-height: 400px; overflow-y: auto; font-family: monospace; font-size: 0.9rem; line-height: 1.6;">
+                {% if files|length > 0 %}
+                <ul style="list-style-type: none; padding: 0; margin: 0;">
+                    {% for file in files %}
+                    <li
+                        style="border-bottom: 1px solid rgba(255,255,255,0.02); padding: 5px 0; display: flex; gap: 10px; color: #a8ffb2;">
+                        {{ file }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div style="text-align: center; color: rgba(255,255,255,0.4); padding: 20px;">
+                    Directory is empty
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

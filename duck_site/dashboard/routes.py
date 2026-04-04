@@ -20,7 +20,18 @@ def dashboard():
             if existing:
                 flash("Domain already exists!")
             else:
+                import os
                 doc_root = f"{user.home_directory}/{domain_name}"
+                
+                # Automatically create directory structure if it doesn't exist
+                os.makedirs(doc_root, exist_ok=True)
+                
+                # Add a default welcome page
+                index_path = os.path.join(doc_root, "index.html")
+                if not os.path.exists(index_path):
+                    with open(index_path, "w") as f:
+                        f.write(f"<h1>Welcome to {domain_name}!</h1><p>Your server is ready.</p>")
+
                 new_domain = Domain(domain_name=domain_name, document_root=doc_root, active=True, user_id=user_id)
                 db.session.add(new_domain)
                 db.session.commit()

@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
+ENV/
+
+# Databases
+*.db
+*.sqlite
+
+# User Data (Hosting sites)
+www/
+ftpdata/
+
+# OS
+.DS_Store
+Thumbs.db

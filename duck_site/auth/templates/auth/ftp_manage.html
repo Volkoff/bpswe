@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Manage FTP Accounts{% endblock %}
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header" style="justify-content: flex-start; gap: 1rem;">
+        <a href="{{ url_for('auth.profile') }}" class="btn-secondary"
+            style="padding: 0.5rem 1rem; text-decoration: none;">&larr; Back to Profile</a>
+        <div>
+            <h1 style="margin: 0; font-size: 1.8rem; display: flex; align-items: center; gap: 1rem;">
+                FTP Access Management
+            </h1>
+            <p style="margin: 0.2rem 0 0 0; color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">Manage database-backed
+                virtual FTP users for your domains.</p>
+        </div>
+    </div>
+
+    <div class="grid-cards" style="grid-template-columns: 1fr 2fr;">
+        <!-- Left Column: Create Form -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="server-card">
+                <h3
+                    style="margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px;">
+                    Add New FTP Account</h3>
+                <form class="auth-form" method="POST" action="{{ url_for('auth.ftp_manage') }}">
+                    <input type="hidden" name="action" value="create">
+
+                    <div class="form-group">
+                        <label for="username">FTP Username</label>
+                        <input type="text" id="username" name="username" placeholder="e.g. user_site_1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Create strong password"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="domain_id">Assign to Domain (Directory)</label>
+                        <select id="domain_id" name="domain_id"
+                            style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); color: white; font-size: 1rem; outline: none; transition: 0.3s;"
+                            required>
+                            <option value="" disabled selected>Select a domain...</option>
+                            {% for domain in domains %}
+                            <option value="{{ domain.domain_id }}" style="background: #191e2d;">{{ domain.domain_name }}
+                                ({{ domain.document_root }})</option>
+                            {% endfor %}
+                        </select>
+                        {% if not domains %}
+                        <small style="color: #e74c3c; display: block; margin-top: 5px;">You have no domains deployed
+                            yet.</small>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 10px; width: 100%;" {% if not domains
+                        %}disabled{% endif %}>
+                        Create Account
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column: List of Accounts -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="server-card" style="height: 100%;">
+                <h3
+                    style="margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px;">
+                    Your FTP Users</h3>
+
+                {% if accounts %}
+                <ul style="list-style-type: none; padding: 0; margin: 0;">
+                    {% for acc in accounts %}
+                    <li
+                        style="border-bottom: 1px solid rgba(255,255,255,0.05); padding: 15px 0; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <strong style="color: #a8ffb2; font-size: 1.1rem;">{{ acc.username }}</strong>
+                            <span style="color: rgba(255,255,255,0.6); font-size: 0.85rem; font-family: monospace;">📁
+                                {{ acc.directory }}</span>
+                            <span style="color: rgba(255,255,255,0.5); font-size: 0.75rem;">Quota: {{ acc.quota }}
+                                MB</span>
+                        </div>
+                        <form method="POST" action="{{ url_for('auth.ftp_manage') }}"
+                            onsubmit="return confirm('Delete FTP account {{ acc.username }}?');">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="account_id" value="{{ acc.account_id }}">
+                            <button type="submit" class="btn-secondary"
+                                style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.3); padding: 0.4rem 0.8rem;">Delete</button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div style="text-align: center; color: rgba(255,255,255,0.4); padding: 40px 20px;">
+                    <p style="margin: 0;">You don't have any FTP accounts yet.</p>
+                    <p style="font-size: 0.85rem; margin-top: 5px;">Use the form to create your first virtual user.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

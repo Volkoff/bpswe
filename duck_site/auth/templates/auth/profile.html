@@ -40,6 +40,16 @@
                 </ul>
             </div>
 
+            <!-- FTP Section -->
+            <div class="profile-section">
+                <h2>FTP Services</h2>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 1rem;">Manage your virtual FTP users or test your local FTP server connection.</p>
+                <div style="display: flex; gap: 10px;">
+                    <a href="{{ url_for('auth.ftp_manage') }}" class="btn-primary" style="background-color: #2ecc71; text-decoration: none; padding: 0.6rem 1rem; display: inline-block; text-align: center; max-width: 250px;">Manage FTP Users</a>
+                    <a href="{{ url_for('auth.ftp_client') }}" class="btn-primary" style="background-color: #3498db; text-decoration: none; padding: 0.6rem 1rem; display: inline-block; text-align: center; max-width: 250px;">Web FTP Test</a>
+                </div>
+            </div>
+
             <!-- Security Section -->
             <div class="profile-section">
                 <h2>Security</h2>

@@ -70,4 +70,3 @@ foreach ($ftp_accounts as $ftp) {
 
 echo "Automatické načítání dat dokončeno";
 ?>
-

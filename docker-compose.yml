@@ -27,21 +27,25 @@ services:
       FLASK_ENV: development
       DB_HOST: postgres
       DB_PORT: "5432"
+    volumes:
+      - ./www:/var/www
 
   ftp:
-    image: stilliard/pure-ftpd:hardened
+    build: ./ftp
     container_name: bpswe-ftp
     restart: always
     ports:
       - "21:21"
       - "30000-30009:30000-30009"
     environment:
-      PUBLICHOST: "localhost"
-      FTP_USER_NAME: "ftpuser"      
-      FTP_USER_PASS: "1234"
-      FTP_USER_HOME: "/home/ftpuser"
+      # Passive mode parameters (localhost for local, IP for production)
+      - PUBLICHOST=localhost
+    depends_on:
+      - postgres
     volumes:
-      - ./ftpdata:/home/ftpuser   
+      - ./ftp/pureftpd-pgsql.conf:/etc/pure-ftpd/pureftpd-pgsql.conf:ro
+      - ./www:/var/www
+
       
   apache:
     build: ./apache
@@ -53,6 +57,7 @@ services:
       - web
     volumes:
       - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./www:/var/www
     #   - ./certbot/conf:/etc/letsencrypt
     #   - ./certbot/www:/var/www/certbot
 

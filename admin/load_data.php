@@ -1,7 +1,7 @@
 <?php
 /**
-* Tento skript inicializuje databázi s výchozími daty pro aplikaci.
-* Vloží počáteční uživatele, tarify, domény a FTP účty do databáze PostgreSQL.
+ * Tento skript inicializuje databázi s výchozími daty pro aplikaci.
+ * Vloží počáteční uživatele, tarify, domény a FTP účty do databáze PostgreSQL.
  */
 
 // connection to PostgreSQL through Unix socket
@@ -42,5 +42,5 @@ $sql_ftp = "INSERT INTO ftp_accounts (username, password_hash, directory, quota,
             ON CONFLICT (username) DO NOTHING";
 pg_query($conn, $sql_ftp);
 
-echo "Данные успешно загружены!";
+echo "Data successfully loaded!";
 ?>
