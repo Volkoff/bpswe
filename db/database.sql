@@ -26,7 +26,7 @@ CREATE TABLE domains (
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE TABLE databases (
+CREATE TABLE user_databases (
     db_id INT AUTO_INCREMENT PRIMARY KEY,
     db_name VARCHAR(30) UNIQUE NOT NULL,
     db_user VARCHAR(50),
