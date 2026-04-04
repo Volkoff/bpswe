@@ -39,7 +39,7 @@ class UserPlan(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
 
 class Database(db.Model):
-    __tablename__ = "databases"
+    __tablename__ = "user_databases"
 
     db_id = db.Column(db.Integer, primary_key=True)
     db_name = db.Column(db.String(30), nullable=False)
