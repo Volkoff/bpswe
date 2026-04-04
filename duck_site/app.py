@@ -8,13 +8,11 @@ def create_app():
     import os
     import urllib.parse
 
-    # Кодируем пароль
     password = urllib.parse.quote_plus("T!gfwo&*24@!gjw!5%")
 
     db_host = os.environ.get("DB_HOST", "127.0.0.1")
     db_port = os.environ.get("DB_PORT", "3306")
 
-    # 🔥 ВАЖНО: меняем на MySQL + pymysql
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         f"mysql+pymysql://student:{password}@{db_host}:{db_port}/hosting_center"
     )
@@ -29,7 +27,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
 
-    # Global auth guard — only login, register, logout, and static files are public
+    # Global auth guard — login, register, logout, and static files are public
     @app.before_request
     def require_login():
         allowed_endpoints = {"auth.login", "auth.register", "auth.logout", "index", "static"}
