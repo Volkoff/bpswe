@@ -43,7 +43,7 @@ services:
     depends_on:
       - mysql
     volumes:
-      - ./ftp/pureftpd-pgsql.conf:/etc/pure-ftpd/pureftpd-pgsql.conf:ro
+      - ./ftp/pureftpd-mysql.conf:/etc/pure-ftpd/pureftpd-mysql.conf:ro
       - ./www:/var/www
 
   apache:

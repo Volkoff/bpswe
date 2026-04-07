@@ -3,6 +3,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User, Domain, FtpAccount
 import ftplib
 import crypt
+import os
+import shutil
 
 auth_bp = Blueprint("auth", __name__, template_folder="templates")
 
@@ -49,6 +51,13 @@ def register():
         
         db.session.add(new_user)
         db.session.commit()
+        
+        # Ensure the user's home directory exists and is owned by the FTP user (UID 1000)
+        try:
+            os.makedirs(new_user.home_directory, exist_ok=True)
+            shutil.chown(new_user.home_directory, user=1000, group=1000)
+        except Exception as e:
+            print(f"Failed to create/chown home directory {new_user.home_directory}: {e}")
         
         flash("Registration successful! Please log in.")
         return redirect(url_for("auth.login"))

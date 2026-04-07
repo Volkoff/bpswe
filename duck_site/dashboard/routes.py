@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash
+import os
+import shutil
 from models import db, Domain, Database, User
 from sqlalchemy import text
 
@@ -20,17 +22,29 @@ def dashboard():
             if existing:
                 flash("Domain already exists!")
             else:
-                import os
                 doc_root = f"{user.home_directory}/{domain_name}"
                 
                 # Automatically create directory structure if it doesn't exist
                 os.makedirs(doc_root, exist_ok=True)
+                
+                # Ensure the FTP user (UID 1000) owns the new directory
+                try:
+                    shutil.chown(user.home_directory, user=1000, group=1000)
+                    shutil.chown(doc_root, user=1000, group=1000)
+                except Exception as e:
+                    print(f"Chown failed for {doc_root}: {e}")
                 
                 # Add a default welcome page
                 index_path = os.path.join(doc_root, "index.html")
                 if not os.path.exists(index_path):
                     with open(index_path, "w") as f:
                         f.write(f"<h1>Welcome to {domain_name}!</h1><p>Your server is ready.</p>")
+                    
+                    # Ensure index.html is also owned by the FTP user
+                    try:
+                        shutil.chown(index_path, user=1000, group=1000)
+                    except Exception as e:
+                        print(f"Chown failed for {index_path}: {e}")
 
                 new_domain = Domain(domain_name=domain_name, document_root=doc_root, active=True, user_id=user_id)
                 db.session.add(new_domain)

@@ -1,9 +1,9 @@
 FROM debian:stable-slim
 
-# Install dependencies for building with PostgreSQL support
+# Install dependencies for building with MySQL support
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libpq-dev \
+    default-libmysqlclient-dev \
     libssl-dev \
     wget \
     && rm -rf /var/lib/apt/lists/*
@@ -13,7 +13,7 @@ WORKDIR /tmp
 RUN wget https://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.51.tar.gz && \
     tar xzvf pure-ftpd-1.0.51.tar.gz && \
     cd pure-ftpd-1.0.51 && \
-    ./configure --with-everything --with-pgsql --with-tls --with-pve && \
+    ./configure --with-everything --with-mysql --with-tls --with-pve && \
     make -j$(nproc) && \
     make install && \
     cd / && rm -rf /tmp/pure-ftpd-1.0.51*
@@ -33,4 +33,4 @@ EXPOSE 21 30000-30009
 
 # Start pure-ftpd via shell to substitute PUBLICHOST variable
 # -P $PUBLICHOST - tells the server its "external" address for passive mode
-CMD ["/bin/sh", "-c", "pure-ftpd -l pgsql:/etc/pure-ftpd/pureftpd-pgsql.conf -p 30000:30009 -E -j -P $PUBLICHOST -d"]
+CMD ["/bin/sh", "-c", "pure-ftpd -l mysql:/etc/pure-ftpd/pureftpd-mysql.conf -p 30000:30009 -E -j -P $PUBLICHOST -d -A -n 1000:4096"]
