@@ -88,7 +88,41 @@ def individual_dashboard(service_id):
     if request.method == "POST":
         action = request.form.get("action")
         if action == "toggle_status":
-            domain.active = not domain.active
+            old_root = domain.document_root
+            if domain.active:
+                # Disabling: rename folder and update root
+                new_root = old_root.rstrip('/') + "_disabled"
+                try:
+                    if os.path.exists(old_root):
+                        os.rename(old_root, new_root)
+                        domain.document_root = new_root
+                        domain.active = False
+                    else:
+                        flash("Warning: Document root directory not found, status updated only in database.")
+                        domain.active = False
+                except Exception as e:
+                    flash(f"Error disabling domain: {str(e)}")
+            else:
+                # Enabling: remove _disabled from folder name
+                if old_root.endswith("_disabled"):
+                    new_root = old_root[:-9]  # removes "_disabled"
+                    try:
+                        if os.path.exists(old_root):
+                            if os.path.exists(new_root):
+                                flash("Error: Target directory already exists. Cannot enable domain.")
+                            else:
+                                os.rename(old_root, new_root)
+                                domain.document_root = new_root
+                                domain.active = True
+                        else:
+                            flash("Warning: Disabled directory not found, status updated only in database.")
+                            domain.active = True
+                    except Exception as e:
+                        flash(f"Error enabling domain: {str(e)}")
+                else:
+                    # Root doesn't end in _disabled, just activate
+                    domain.active = True
+
             db.session.commit()
             status_text = "stopped" if not domain.active else "started"
             flash(f"Domain {domain.domain_name} has been {status_text}.")
