@@ -89,7 +89,6 @@ def settings():
         
     if request.method == "POST":
         session["settings"] = {
-            "theme": request.form.get("theme", "dark"),
             "show_console": "show_console" in request.form,
             "show_cpu": "show_cpu" in request.form,
             "show_ram": "show_ram" in request.form,
@@ -99,7 +98,6 @@ def settings():
         return redirect(url_for("auth.settings"))
         
     user_settings = session.get("settings", {
-        "theme": "dark",
         "show_console": True,
         "show_cpu": True,
         "show_ram": True,

@@ -69,26 +69,17 @@
             </div>
             {% endif %}
 
-            <div class="db-section" style="margin-top: 0;">
-                <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem;">Attach Database</h4>
-                <div style="display: flex; gap: 0.5rem;">
-                    <select class="db-select" style="flex: 1; padding: 0.4rem;">
-                        <option value="">Select a database...</option>
-                        {% for db in databases %}
-                        <option value="{{ db.db_id }}">{{ db.db_name }}</option>
-                        {% endfor %}
-                    </select>
-                    <button class="btn-secondary btn-sm" style="padding: 0.4rem 0.8rem;">Connect DB</button>
-                </div>
-            </div>
 
-            <div class="server-actions" style="margin-top: 1rem;">
-                <a href="{{ url_for('dashboard.individual_dashboard', service_id=domain.domain_id) }}" class="btn-secondary btn-sm" style="text-align: center; text-decoration: none; display: inline-block;">Manage</a>
-                {% if domain.active %}
-                <button class="btn-secondary btn-sm" style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.3);">Stop</button>
-                {% else %}
-                <button class="btn-secondary btn-sm" style="color: #2ecc71; border-color: rgba(46, 204, 113, 0.3);">Start</button>
-                {% endif %}
+            <div class="server-actions" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                <a href="{{ url_for('dashboard.individual_dashboard', service_id=domain.domain_id) }}" class="btn-secondary btn-sm" style="text-align: center; text-decoration: none; flex: 1;">Manage</a>
+                <form method="POST" action="{{ url_for('dashboard.individual_dashboard', service_id=domain.domain_id) }}" style="margin: 0; flex: 1; display: flex;">
+                    <input type="hidden" name="action" value="toggle_status">
+                    {% if domain.active %}
+                    <button type="submit" class="btn-secondary btn-sm" style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.3); width: 100%;">Stop</button>
+                    {% else %}
+                    <button type="submit" class="btn-secondary btn-sm" style="color: #2ecc71; border-color: rgba(46, 204, 113, 0.3); width: 100%;">Start</button>
+                    {% endif %}
+                </form>
             </div>
         </div>
         {% endfor %}

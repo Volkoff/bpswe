@@ -80,17 +80,6 @@ input:checked + .slider:before {
     
     <form method="POST" action="{{ url_for('auth.settings') }}">
         
-        <div class="setting-item">
-            <div class="setting-info">
-                <h3>Light Theme</h3>
-                <p>Toggle the dashboard color scheme</p>
-            </div>
-            <label class="switch">
-                <input type="checkbox" name="theme" value="light" {% if settings.theme == 'light' %}checked{% endif %}>
-                <span class="slider"></span>
-            </label>
-        </div>
-
         <h3 style="margin-top: 2rem; margin-bottom: 0.5rem; color: #3498db;">Dashboard Display Options</h3>
         <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-bottom: 1.5rem;">Toggle which data blocks you want to see on the shortened server cards.</p>
 

@@ -92,6 +92,17 @@ def individual_dashboard(service_id):
             db.session.commit()
             status_text = "stopped" if not domain.active else "started"
             flash(f"Domain {domain.domain_name} has been {status_text}.")
+            return redirect(url_for('dashboard.individual_dashboard', service_id=domain.domain_id))
+        elif action == "destroy_server":
+            domain_name = domain.domain_name
+            try:
+                shutil.rmtree(domain.document_root)
+            except Exception as e:
+                print(f"Failed to remove directory {domain.document_root}: {e}")
+            db.session.delete(domain)
+            db.session.commit()
+            flash(f"Server {domain_name} has been destroyed.")
+            return redirect(url_for('dashboard.dashboard'))
         return redirect(url_for('dashboard.individual_dashboard', service_id=domain.domain_id))
         
     return render_template("dashboard/individual.html", domain=domain)
