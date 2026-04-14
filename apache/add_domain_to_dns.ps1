@@ -6,6 +6,7 @@ $entries = @(
     "127.0.0.1   blog.mojefirma.cz"
     "127.0.0.1   admin.mojefirma.cz"
     "127.0.0.1   ftp.mojefirma.cz"
+    "127.0.0.1   neco.test.mojefirma.cz"
     )
 
 $hostsContent = Get-Content $hostsPath

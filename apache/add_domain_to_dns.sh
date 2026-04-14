@@ -9,6 +9,7 @@ DOMAINS=(
     "blog.mojefirma.cz"
     "admin.mojefirma.cz"
     "ftp.mojefirma.cz"
+    "neco.test.mojefirma.cz"
 )
 
 for DOMAIN in "${DOMAINS[@]}"; do
