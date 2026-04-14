@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\anton\OneDrive\\u0420\u0430\u0431\u043e\u0447\u0438\u0439 \u0441\u0442\u043e\u043b\Projects\BPSWE\duck_site\test_supabase.py", line 3, in <module>
-    conn = psycopg2.connect(
-  File "C:\Users\anton\AppData\Local\Programs\Python\Python310\lib\site-packages\psycopg2\__init__.py", line 134, in connect
-    dsn = _ext.make_dsn(dsn, **kwargs)
-  File "C:\Users\anton\AppData\Local\Programs\Python\Python310\lib\site-packages\psycopg2\extensions.py", line 145, in make_dsn
-    parse_dsn(dsn)
-psycopg2.ProgrammingError: invalid dsn: invalid percent-encoded token: "!gjw!5%@db.ivzwerijqlaftpqnnmdc.supabase.co"
-
