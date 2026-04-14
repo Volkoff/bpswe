@@ -57,6 +57,7 @@ services:
     volumes:
       - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
       - ./www:/var/www
+      - ./admin:/admin
 
 volumes:
   mysql_data:
