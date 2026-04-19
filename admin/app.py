@@ -7,7 +7,7 @@ def get_connection():
     return pymysql.connect(
         host="mysql",
         user="student",
-        password="T!gfwo&*24@!gjw!5%",
+        password="1234",
         database="hosting_center",
         cursorclass=pymysql.cursors.DictCursor
     )
