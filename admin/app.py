@@ -25,23 +25,23 @@ def dashboard():
         cursor.execute("SELECT COUNT(*) AS count FROM ftp_accounts")
         ftp_count = cursor.fetchone()["count"]
 
-        cursor.execute("SELECT COUNT(*) AS count FROM user_databases")
-        db_count = cursor.fetchone()["count"]
-
     conn.close()
     return render_template(
         "dashboard.html",
         users_count=users_count,
         domains_count=domains_count,
-        ftp_count=ftp_count,
-        db_count=db_count
+        ftp_count=ftp_count
     )
 
 @app.route("/users")
 def users():
     conn = get_connection()
     with conn.cursor() as cursor:
-        cursor.execute("SELECT user_id, username, email, role, home_directory FROM users ORDER BY user_id")
+        cursor.execute("""
+            SELECT user_id, username, email, role, home_directory
+            FROM users
+            ORDER BY user_id
+        """)
         users = cursor.fetchall()
     conn.close()
     return render_template("users.html", users=users)
@@ -73,20 +73,6 @@ def ftp():
         ftp_accounts = cursor.fetchall()
     conn.close()
     return render_template("ftp.html", ftp_accounts=ftp_accounts)
-
-@app.route("/databases")
-def databases():
-    conn = get_connection()
-    with conn.cursor() as cursor:
-        cursor.execute("""
-            SELECT d.db_id, d.db_name, d.db_user, u.username AS owner, d.created_at
-            FROM user_databases d
-            LEFT JOIN users u ON d.user_id = u.user_id
-            ORDER BY d.db_id
-        """)
-        databases = cursor.fetchall()
-    conn.close()
-    return render_template("databases.html", databases=databases)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
