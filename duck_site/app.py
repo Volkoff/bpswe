@@ -13,6 +13,11 @@ def create_app():
     db_host = os.environ.get("DB_HOST", "127.0.0.1")
     db_port = os.environ.get("DB_PORT", "3306")
 
+    app.config["MYSQL_ROOT_USER"] = os.environ.get("MYSQL_ROOT_USER", "root")
+    app.config["MYSQL_ROOT_PASSWORD"] = os.environ.get("MYSQL_ROOT_PASSWORD", "rootpassword")
+    app.config["MYSQL_HOST"] = db_host
+    app.config["MYSQL_PORT"] = db_port
+
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         f"mysql+pymysql://student:{password}@{db_host}:{db_port}/hosting_center"
     )

@@ -4,7 +4,8 @@
 
 <div class="dashboard-container">
     {% if db_version %}
-    <div style="background-color: rgba(46, 204, 113, 0.1); border: 1px solid #2ecc71; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+    <div
+        style="background-color: rgba(46, 204, 113, 0.1); border: 1px solid #2ecc71; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
         <h4 style="margin: 0 0 0.5rem 0; color: #2ecc71;">Database Connection Test:</h4>
         <p style="margin: 0; font-family: monospace;">{{ db_version }}</p>
     </div>
@@ -12,17 +13,19 @@
 
     <div class="dashboard-header" style="justify-content: space-between; align-items: center;">
         <h1>Your Servers (Domains)</h1>
-        <form method="POST" action="{{ url_for('dashboard.dashboard') }}" style="display: flex; gap: 10px; align-items: center; margin: 0;">
-            <input type="text" name="domain_name" placeholder="example.com" required style="padding: 0.6rem; border-radius: 4px; border: 1px solid #ccc; background: rgba(255, 255, 255, 0.1); color: white;">
-            <button type="submit" class="btn-primary" style="width: auto; margin-top: 0; padding: 0.6rem 1.5rem;">+ Deploy Server</button>
+        <form method="POST" action="{{ url_for('dashboard.dashboard') }}"
+            style="display: flex; gap: 10px; align-items: center; margin: 0;">
+            <input type="text" name="domain_name" placeholder="example.com" required
+                style="padding: 0.6rem; border-radius: 4px; border: 1px solid #ccc; background: rgba(255, 255, 255, 0.1); color: white;">
+            <button type="submit" class="btn-primary" style="width: auto; margin-top: 0; padding: 0.6rem 1.5rem;">+
+                Deploy Server</button>
         </form>
     </div>
 
     {% set settings = session.get('settings', {'show_console': False, 'show_cpu': False, 'show_ram': False, 'show_disk': False}) %}
-    
+
     <div class="grid-cards" {% if domains|length > 3 %}style="max-height: 70vh; overflow-y: auto; padding-right: 15px;"{% endif %}>
         {% for domain in domains %}
-        <!-- Server Card -->
         <div class="server-card">
             <div class="server-top">
                 <div class="server-title">{{ domain.domain_name }}</div>
@@ -32,52 +35,93 @@
                 <div class="status-badge status-stopped">Stopped</div>
                 {% endif %}
             </div>
-            
+
             <div class="server-details">
                 <p><span>Doc Root</span> <strong>{{ domain.document_root }}</strong></p>
                 <p><span>Created</span> <strong>{{ domain.created_at.strftime('%Y-%m-%d') }}</strong></p>
+            </div>
+
+            {% set expected_db_name = domain.domain_name.split('@')[0].split('.')[0].lower() ~ '_db' %}
+            {% set db_match = namespace(item=None) %}
+
+            {% for database in databases %}
+                {% if database.db_name == expected_db_name %}
+                    {% set db_match.item = database %}
+                {% endif %}
+            {% endfor %}
+
+            <div class="server-details" style="margin-top: 0.8rem;">
+                <p><span>Database Name</span> <strong>{{ expected_db_name }}</strong></p>
+                {% if db_match.item %}
+                    <p><span>Database User</span> <strong>{{ db_match.item.db_user }}</strong></p>
+                    <p><span>Database Password</span> <strong>{{ db_match.item.db_password }}</strong></p>
+                {% else %}
+                    <p><span>Database Password</span> <strong style="color: #e74c3c;">Not created yet</strong></p>
+                {% endif %}
             </div>
 
             {% if settings.show_cpu or settings.show_ram or settings.show_disk %}
             <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
                 {% if settings.show_cpu %}
                 <div style="flex: 1;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">CPU</span><span style="font-size: 0.8rem; font-weight: bold;">42%</span></div>
-                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;"><div style="width: 42%; height: 100%; background: #2ecc71;"></div></div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                        <span style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">CPU</span>
+                        <span style="font-size: 0.8rem; font-weight: bold;">42%</span>
+                    </div>
+                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                        <div style="width: 42%; height: 100%; background: #2ecc71;"></div>
+                    </div>
                 </div>
                 {% endif %}
+
                 {% if settings.show_ram %}
                 <div style="flex: 1;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">RAM</span><span style="font-size: 0.8rem; font-weight: bold;">2.1GB</span></div>
-                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;"><div style="width: 52%; height: 100%; background: #f39c12;"></div></div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                        <span style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">RAM</span>
+                        <span style="font-size: 0.8rem; font-weight: bold;">2.1GB</span>
+                    </div>
+                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                        <div style="width: 52%; height: 100%; background: #f39c12;"></div>
+                    </div>
                 </div>
                 {% endif %}
+
                 {% if settings.show_disk %}
                 <div style="flex: 1;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Disk</span><span style="font-size: 0.8rem; font-weight: bold;">12GB</span></div>
-                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;"><div style="width: 30%; height: 100%; background: #3498db;"></div></div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                        <span style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Disk</span>
+                        <span style="font-size: 0.8rem; font-weight: bold;">12GB</span>
+                    </div>
+                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                        <div style="width: 30%; height: 100%; background: #3498db;"></div>
+                    </div>
                 </div>
                 {% endif %}
             </div>
             {% endif %}
 
             {% if settings.show_console %}
-            <div style="background: rgba(0,0,0,0.5); border-radius: 6px; padding: 0.8rem; height: 80px; overflow-y: auto; font-family: monospace; font-size: 0.75rem; color: #a8ffb2; margin-bottom: 1rem;">
+            <div
+                style="background: rgba(0,0,0,0.5); border-radius: 6px; padding: 0.8rem; height: 80px; overflow-y: auto; font-family: monospace; font-size: 0.75rem; color: #a8ffb2; margin-bottom: 1rem;">
                 [14:02:11] systemd[1]: Started Server.<br>
                 [14:05:32] sshd[12401]: Accepted connection<br>
                 <span style="color: #fff;">_</span>
             </div>
             {% endif %}
 
-
             <div class="server-actions" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                <a href="{{ url_for('dashboard.individual_dashboard', service_id=domain.domain_id) }}" class="btn-secondary btn-sm" style="text-align: center; text-decoration: none; flex: 1;">Manage</a>
-                <form method="POST" action="{{ url_for('dashboard.individual_dashboard', service_id=domain.domain_id) }}" style="margin: 0; flex: 1; display: flex;">
+                <a href="{{ url_for('dashboard.individual_dashboard', service_id=domain.domain_id) }}"
+                    class="btn-secondary btn-sm" style="text-align: center; text-decoration: none; flex: 1;">Manage</a>
+                <form method="POST"
+                    action="{{ url_for('dashboard.individual_dashboard', service_id=domain.domain_id) }}"
+                    style="margin: 0; flex: 1; display: flex;">
                     <input type="hidden" name="action" value="toggle_status">
                     {% if domain.active %}
-                    <button type="submit" class="btn-secondary btn-sm" style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.3); width: 100%;">Stop</button>
+                    <button type="submit" class="btn-secondary btn-sm"
+                        style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.3); width: 100%;">Stop</button>
                     {% else %}
-                    <button type="submit" class="btn-secondary btn-sm" style="color: #2ecc71; border-color: rgba(46, 204, 113, 0.3); width: 100%;">Start</button>
+                    <button type="submit" class="btn-secondary btn-sm"
+                        style="color: #2ecc71; border-color: rgba(46, 204, 113, 0.3); width: 100%;">Start</button>
                     {% endif %}
                 </form>
             </div>

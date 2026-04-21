@@ -30,7 +30,7 @@ CREATE TABLE user_databases (
     db_id INT AUTO_INCREMENT PRIMARY KEY,
     db_name VARCHAR(30) UNIQUE NOT NULL,
     db_user VARCHAR(50),
-    db_password VARCHAR(100),
+    db_password VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_id INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
@@ -66,9 +66,6 @@ VALUES ('user1', 'user1@test.cz', 'hash123', 'user', '/var/www/user1');
 
 INSERT INTO plans (name, price, expire_days)
 VALUES ('Basic', 2.99, 30);
-
-INSERT INTO domains (domain_name, document_root, user_id)
-VALUES ('www.mojefirma.cz', '/var/www/user1/site1', 1);
 
 INSERT INTO ftp_accounts (username, password_hash, directory, quota, user_id)
 VALUES ('ftpuser1', 'hash123', '/var/www/user1', 1000, 1);

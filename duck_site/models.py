@@ -44,7 +44,7 @@ class Database(db.Model):
     db_id = db.Column(db.Integer, primary_key=True)
     db_name = db.Column(db.String(30), nullable=False)
     db_user = db.Column(db.String(50), nullable=False)
-    db_password = db.Column(db.String(100), nullable=False)
+    db_password = db.Column(db.String(500), nullable=False)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
 
